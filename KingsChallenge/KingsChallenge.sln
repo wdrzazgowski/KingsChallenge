@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kings.Tests", "Kings.Tests\Kings.Tests.csproj", "{02901000-CF91-4CCF-AB6D-C1675853796F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kings", "Kings\Kings.csproj", "{776E0F85-33FA-4995-A5C6-9F699F598B34}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{02901000-CF91-4CCF-AB6D-C1675853796F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02901000-CF91-4CCF-AB6D-C1675853796F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02901000-CF91-4CCF-AB6D-C1675853796F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02901000-CF91-4CCF-AB6D-C1675853796F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{776E0F85-33FA-4995-A5C6-9F699F598B34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{776E0F85-33FA-4995-A5C6-9F699F598B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{776E0F85-33FA-4995-A5C6-9F699F598B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{776E0F85-33FA-4995-A5C6-9F699F598B34}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

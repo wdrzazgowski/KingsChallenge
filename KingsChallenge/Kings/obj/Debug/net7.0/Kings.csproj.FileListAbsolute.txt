@@ -1,0 +1,11 @@
+/Users/Wojtek/git/learning/Kings/KingsChallenge/Kings/bin/Debug/net7.0/Kings.deps.json
+/Users/Wojtek/git/learning/Kings/KingsChallenge/Kings/bin/Debug/net7.0/Kings.dll
+/Users/Wojtek/git/learning/Kings/KingsChallenge/Kings/bin/Debug/net7.0/Kings.pdb
+/Users/Wojtek/git/learning/Kings/KingsChallenge/Kings/obj/Debug/net7.0/Kings.GeneratedMSBuildEditorConfig.editorconfig
+/Users/Wojtek/git/learning/Kings/KingsChallenge/Kings/obj/Debug/net7.0/Kings.AssemblyInfoInputs.cache
+/Users/Wojtek/git/learning/Kings/KingsChallenge/Kings/obj/Debug/net7.0/Kings.AssemblyInfo.cs
+/Users/Wojtek/git/learning/Kings/KingsChallenge/Kings/obj/Debug/net7.0/Kings.csproj.CoreCompileInputs.cache
+/Users/Wojtek/git/learning/Kings/KingsChallenge/Kings/obj/Debug/net7.0/Kings.dll
+/Users/Wojtek/git/learning/Kings/KingsChallenge/Kings/obj/Debug/net7.0/refint/Kings.dll
+/Users/Wojtek/git/learning/Kings/KingsChallenge/Kings/obj/Debug/net7.0/Kings.pdb
+/Users/Wojtek/git/learning/Kings/KingsChallenge/Kings/obj/Debug/net7.0/ref/Kings.dll
