@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "E5muovrCMv/Lo4DU80aZglwQOHSRipdH70/E6uhg7PI0iymOsbLDQjbvc6f0x1Ot07USR0GvgWBDIq0iiu5I8w==",
+  "success": true,
+  "projectFilePath": "/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/KingsApp.csproj",
+  "expectedPackageFiles": [
+    "/Users/Wojtek/.nuget/packages/json.net/1.0.33/json.net.1.0.33.nupkg.sha512"
+  ],
+  "logs": []
+}

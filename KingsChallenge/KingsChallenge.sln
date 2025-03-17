@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kings.Tests", "Kings.Tests\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kings", "Kings\Kings.csproj", "{776E0F85-33FA-4995-A5C6-9F699F598B34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KingsApp", "KingsApp\KingsApp.csproj", "{BBA3D305-DE31-431D-9C6C-331F34928E62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{776E0F85-33FA-4995-A5C6-9F699F598B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{776E0F85-33FA-4995-A5C6-9F699F598B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{776E0F85-33FA-4995-A5C6-9F699F598B34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBA3D305-DE31-431D-9C6C-331F34928E62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBA3D305-DE31-431D-9C6C-331F34928E62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBA3D305-DE31-431D-9C6C-331F34928E62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBA3D305-DE31-431D-9C6C-331F34928E62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,17 @@
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/bin/Debug/net7.0/KingsApp
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/bin/Debug/net7.0/KingsApp.deps.json
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/bin/Debug/net7.0/KingsApp.runtimeconfig.json
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/bin/Debug/net7.0/KingsApp.dll
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/bin/Debug/net7.0/KingsApp.pdb
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/obj/Debug/net7.0/KingsApp.GeneratedMSBuildEditorConfig.editorconfig
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/obj/Debug/net7.0/KingsApp.AssemblyInfoInputs.cache
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/obj/Debug/net7.0/KingsApp.AssemblyInfo.cs
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/obj/Debug/net7.0/KingsApp.csproj.CoreCompileInputs.cache
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/obj/Debug/net7.0/KingsApp.dll
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/obj/Debug/net7.0/refint/KingsApp.dll
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/obj/Debug/net7.0/KingsApp.pdb
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/obj/Debug/net7.0/KingsApp.genruntimeconfig.cache
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/obj/Debug/net7.0/ref/KingsApp.dll
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/bin/Debug/net7.0/Json.Net.dll
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/obj/Debug/net7.0/KingsApp.csproj.AssemblyReference.cache
+/Users/Wojtek/git/learning/Kings/KingsChallenge/KingsApp/obj/Debug/net7.0/KingsApp.csproj.CopyComplete
