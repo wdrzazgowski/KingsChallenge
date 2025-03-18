@@ -10,7 +10,7 @@ public class KingsChallenge
     static void Main(string[] args)
     {
         string _kingsFileOnline = "https://gist.githubusercontent.com/christianpanton/10d65ccef9f29de3acd49d97ed423736/raw/b09563bc0c4b318132c7a738e679d4f984ef0048/kings";
-        List<King> _kings = new List<King>();
+        List<KingRaw> _kings = new List<KingRaw>();
 
         WebRequest wr = WebRequest.Create(_kingsFileOnline);
         wr.Credentials = CredentialCache.DefaultCredentials;
@@ -23,17 +23,21 @@ public class KingsChallenge
         using(StreamReader sr = new StreamReader(dataStream))
         {
             string kings = sr.ReadToEnd();
-            _kings = JsonSerializer.Deserialize<List<King>>(kings);
+            // Console.Out.WriteLine(kings);
+            _kings = JsonSerializer.Deserialize<List<KingRaw>>(kings);
         }
         Console.Out.WriteLine(_kings.Count);
+
+        KingRaw firstKing = _kings.First();
+        Console.Out.WriteLine(firstKing.nm);
     }
 }
 
-public class King
+class KingRaw
 {
-    int _id;
-    string _nm;
-    string _cty;
-    string _hse;
-    string _yrs;
+    public int id { get; set; }
+    public string nm { get; set; }
+    public string cty { get; set; }
+    public string hse { get; set; }
+    public string yrs { get; set; }
 }
