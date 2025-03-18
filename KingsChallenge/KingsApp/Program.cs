@@ -28,8 +28,8 @@ public class KingsChallenge
         }
         Console.Out.WriteLine("Monarch count: {0}", _kings.Count);
 
-        KingRaw firstKing = _kings.First();
-        Console.Out.WriteLine(firstKing.ReignLength());
+        foreach(KingRaw king in _kings)
+            Console.Out.WriteLine(king.ToString());
     }
 }
 
@@ -53,18 +53,42 @@ class KingRaw
             ParseReignYears();
         } 
     }
-    int _reignStart;
-    int _reignEnd;
+    public int _reignStart;
+    public int _reignEnd;
 
     private void ParseReignYears()
     {
-        _reignEnd = 1066;
-        _reignStart = 1050;
+        string[] years = _years.Split('-');
+        _reignStart = Int32.Parse(years[0]);
+        if(years.Length == 1)
+            _reignEnd = _reignStart;
+        else
+        {
+            //Console.Out.WriteLine("Years[1]: {0}", years[1]);
+            if(!Int32.TryParse(years[1], out _reignEnd))
+                _reignEnd = -1;
+            //Console.Out.WriteLine("_reignEnd: {0}", _reignEnd);
+        }
     }
 
     public int ReignLength()
     {
-        return _reignEnd - _reignStart;
+        // Console.Out.WriteLine(_years);
+        // Console.Out.WriteLine(_reignStart);
+        // Console.Out.WriteLine(_reignEnd);
+        return (_reignEnd - _reignStart);
     }
 
+    public override string ToString()
+    {
+        // return String.Format("King {0}\n\tCity {1}\n\t{House {2}\n\tReign started at {3}\n\tReign ended at {4}\n\tReigned for {5}",
+        //     nm,
+        //     cty,
+        //     hse,
+        //     _reignStart,
+        //     _reignEnd,
+        //     ReignLength());
+        int len = ReignLength();
+        return String.Format("{0}\n\t{1}\n\t{2}\n\t{3}\n\t{4}\n\t{5}", nm, cty, hse, _reignStart, _reignEnd, len);
+    }
 }
