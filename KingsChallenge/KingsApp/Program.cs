@@ -26,10 +26,10 @@ public class KingsChallenge
             // Console.Out.WriteLine(kings);
             _kings = JsonSerializer.Deserialize<List<KingRaw>>(kings);
         }
-        Console.Out.WriteLine(_kings.Count);
+        Console.Out.WriteLine("Monarch count: {0}", _kings.Count);
 
         KingRaw firstKing = _kings.First();
-        Console.Out.WriteLine(firstKing.nm);
+        Console.Out.WriteLine(firstKing.ReignLength());
     }
 }
 
@@ -39,5 +39,32 @@ class KingRaw
     public string nm { get; set; }
     public string cty { get; set; }
     public string hse { get; set; }
-    public string yrs { get; set; }
+
+    private string _years;
+    public string yrs 
+    { 
+        get
+        {
+            return _years;
+        }
+        set
+        {
+            _years = value;
+            ParseReignYears();
+        } 
+    }
+    int _reignStart;
+    int _reignEnd;
+
+    private void ParseReignYears()
+    {
+        _reignEnd = 1066;
+        _reignStart = 1050;
+    }
+
+    public int ReignLength()
+    {
+        return _reignEnd - _reignStart;
+    }
+
 }
