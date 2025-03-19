@@ -30,6 +30,52 @@ public class KingsChallenge
 
         foreach(KingRaw king in _kings)
             Console.Out.WriteLine(king.ToString());
+
+        MonarchListUtils mlUtils = new MonarchListUtils(_kings);
+
+        int monarchCount = mlUtils.GetMonarchCount(_kings);
+        Console.Out.WriteLine("MOnarch count: {0}", monarchCount);
+
+        KingRaw longestReigningMonarch = mlUtils.GetLongestReiningMonarch();
+        Console.Out.WriteLine("Longest reigning monarch: {0}, ruled for {1} years", longestReigningMonarch.nm, longestReigningMonarch.ReignLength());
+
+
+        string longestReiningHouse = mlUtils.GetLongestReiningHouse();
+        Console.Out.WriteLine("Longest reigning house: {0}", longestReiningHouse);
+
+
+        string mostCommonFirstName = mlUtils.GetMostCommonFirstName();
+        Console.Out.WriteLine("Most common first name: {0}", mostCommonFirstName);
+    }
+}
+
+class MonarchListUtils
+{
+    List<KingRaw> _monarchList;
+
+    public MonarchListUtils(List<KingRaw> monarchList)
+    {
+        _monarchList = monarchList;
+    }
+
+    public int GetMonarchCount(List<KingRaw> monarchList)
+    {
+        return 10;
+    }
+
+    public KingRaw GetLongestReiningMonarch()
+    {
+        return null;
+    }
+
+    public string GetLongestReiningHouse()
+    {
+        return null;
+    }
+
+    public string GetMostCommonFirstName()
+    {
+        return null;
     }
 }
 
