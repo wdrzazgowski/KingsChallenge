@@ -27,21 +27,21 @@ namespace KingsChallenge
             }
             catch
             {
-                Console.Error.WriteLine("Could not initialize log4net logger - continuing without.");
                 // not very nice... but if log4net config is not found the applciation will continue
+                Console.Error.WriteLine("Could not initialize log4net logger - continuing without.");
             }
 
             logger.Debug("Creating MonarchDataProvider object");
             MonarchDataProvider mdp = new MonarchDataProvider(logger);
             
-            List<KingRaw> _kings = mdp.GetMonarchData(_kingsFileOnline).Result;
+            List<Monarch> _kings = mdp.GetMonarchData(_kingsFileOnline).Result;
 
             MonarchListUtils mlUtils = new MonarchListUtils(_kings, logger);
 
             int monarchCount = mlUtils.GetMonarchCount();
             Console.Out.WriteLine("Monarch count: {0}", monarchCount);
 
-            KingRaw longestReigningMonarch = mlUtils.GetLongestReiningMonarch();
+            Monarch longestReigningMonarch = mlUtils.GetLongestReiningMonarch();
             Console.Out.WriteLine("Longest reigning monarch: {0}, ruled for {1} years\n\tAre we not shamefuly ignoring King Charles?", longestReigningMonarch.nm, longestReigningMonarch.ReignLength());
 
 
@@ -60,7 +60,7 @@ namespace KingsChallenge
             var repo = log4net.LogManager.CreateRepository(Assembly.GetEntryAssembly(),
                         typeof(log4net.Repository.Hierarchy.Hierarchy));
             log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);
-    }
+        }
     }
 
     class MonarchDataProvider
@@ -70,7 +70,7 @@ namespace KingsChallenge
         {
             _logger = logger;
         }
-        public async Task<List<KingRaw>> GetMonarchData(string monarchUri)
+        public async Task<List<Monarch>> GetMonarchData(string monarchUri)
         {
             using(HttpClient c = new HttpClient())
             {
@@ -79,16 +79,16 @@ namespace KingsChallenge
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
                 _logger.Debug($"Read response {responseBody}");
-                return JsonSerializer.Deserialize<List<KingRaw>>(responseBody);
+                return JsonSerializer.Deserialize<List<Monarch>>(responseBody);
             }
         }
     }
 
     class MonarchListUtils
     {
-        List<KingRaw> _monarchList;
+        List<Monarch> _monarchList;
         ILog _logger;
-        public MonarchListUtils(List<KingRaw> monarchList, ILog logger)
+        public MonarchListUtils(List<Monarch> monarchList, ILog logger)
         {
             _logger = logger;
             _monarchList = monarchList;
@@ -96,31 +96,34 @@ namespace KingsChallenge
 
         public int GetMonarchCount()
         {
+            if(_monarchList == null)
+                return 0;
+                
             return _monarchList.Count();
         }
 
-        public KingRaw GetLongestReiningMonarch()
+        public Monarch GetLongestReiningMonarch()
         {
-            KingRaw? lrMonarch = _monarchList.MaxBy( m => m.ReignLength());
+            Monarch? lrMonarch = _monarchList.MaxBy( m => m.ReignLength());
             return lrMonarch;
         }
 
         public string GetLongestReiningHouse()
         {
-            IEnumerable<IGrouping<string?, KingRaw>> houses = _monarchList.GroupBy( monarch => monarch.hse);
+            IEnumerable<IGrouping<string?, Monarch>> houses = _monarchList.GroupBy( monarch => monarch.hse);
             
             return houses.MaxBy( house => house.Count()).Key;
         }
 
         public string GetMostCommonFirstName()
         {
-            IEnumerable<IGrouping<string, KingRaw>> fNames = _monarchList.GroupBy( monarch => monarch.FirstName());
+            IEnumerable<IGrouping<string, Monarch>> fNames = _monarchList.GroupBy( monarch => monarch.FirstName());
 
             return fNames.MaxBy( fName => fName.Count()).Key;
         }
     }
 
-    public class KingRaw
+    public class Monarch
     {
         public int id { get; set; }
         public string? nm { get; set; }
@@ -128,7 +131,7 @@ namespace KingsChallenge
         public string? hse { get; set; }
 
         private string? _years;
-        public string yrs 
+        public string? yrs 
         { 
             get
             {
@@ -145,7 +148,7 @@ namespace KingsChallenge
 
         private void ParseReignYears()
         {
-            string[] years = _years.Split('-');
+            string?[] years = _years.Split('-');
             _reignStart = Int32.Parse(years[0]);
             if(years.Length == 1)
                 _reignEnd = _reignStart;
