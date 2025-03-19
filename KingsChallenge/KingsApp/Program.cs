@@ -48,7 +48,7 @@ namespace KingsChallenge
                 longestReigningMonarch.ReignLength());
 
 
-            var longestReiningHouse = mlUtils.GetLongestReigningHouse();  // ?? "Longet reigning house not found - possible error in data processing."
+            var longestReiningHouse = mlUtils.GetLongestReigningHouse();  // 
             Console.Out.WriteLine($"Longest reigning house: {longestReiningHouse.Item1} reigned for {longestReiningHouse.Item2} years");
 
 
@@ -73,6 +73,7 @@ namespace KingsChallenge
         {
             _logger = logger;
         }
+
         public async Task<List<Monarch>> GetMonarchData(string monarchUri)
         {
             using(HttpClient c = new HttpClient())
@@ -81,14 +82,12 @@ namespace KingsChallenge
                 HttpResponseMessage response = await c.GetAsync(monarchUri);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
-                //_logger.Debug($"Read response {responseBody}");
                 List<MonarchDto> mdtoList = JsonSerializer.Deserialize<List<MonarchDto>>(responseBody);
                 
                 List<Monarch> monarchs = new List<Monarch>();
                 foreach(MonarchDto mdto in mdtoList)
                 {
                     Monarch m = new Monarch(mdto, _logger);
-                    m.ParseReignYears();
                     monarchs.Add(m);
                 }
                 return monarchs;
@@ -127,14 +126,14 @@ namespace KingsChallenge
 
             IEnumerable<IGrouping<string?, Monarch>> houses = _monarchList.GroupBy( monarch => monarch._monarchData.hse);
             
+            // go though each of the group, sum the length of regin and put in a list for filtering at the return clause
             List<(string, int)> houseRules = new List<(string, int)>();
-            foreach(IGrouping<string?, Monarch> house in houses)
+            foreach(IGrouping<string, Monarch> house in houses)
             {
                 int ruledFor = house.Sum( h => h.ReignLength());
                 _logger.Debug($"House {house.Key} ruled for {ruledFor} years.");  
                 houseRules.Add((house.Key, ruledFor));
             }
-            //return (houses.MaxBy( house => house.Count()).Key, 99);
             return houseRules.MaxBy(h=>h.Item2);
         }
 
@@ -165,13 +164,13 @@ namespace KingsChallenge
 
         public Monarch()
         {
-
         }
 
         public Monarch(MonarchDto mdto, ILog logger)
         {
             _logger = logger;
             _monarchData = mdto;
+            ParseReignYears();
         }        
 
         public int _reignStart;
@@ -185,7 +184,7 @@ namespace KingsChallenge
             }
         }
 
-        public void ParseReignYears()
+        void ParseReignYears()
         {  
             try
             {
