@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kings.Tests", "Kings.Tests\Kings.Tests.csproj", "{02901000-CF91-4CCF-AB6D-C1675853796F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kings", "Kings\Kings.csproj", "{776E0F85-33FA-4995-A5C6-9F699F598B34}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KingsApp", "KingsApp\KingsApp.csproj", "{BBA3D305-DE31-431D-9C6C-331F34928E62}"
 EndProject
 Global
