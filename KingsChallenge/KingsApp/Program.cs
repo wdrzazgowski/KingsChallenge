@@ -12,10 +12,13 @@ namespace KingsChallenge
         static void Main(string[] args)
         {
             string _kingsFileOnline = "https://gist.githubusercontent.com/christianpanton/10d65ccef9f29de3acd49d97ed423736/raw/b09563bc0c4b318132c7a738e679d4f984ef0048/kings";
+            // DeprecatedMonarchDataProvider dp = new DeprecatedMonarchDataProvider();     
+            // List<KingRaw> _kings = dp.GetMonarchData(_kingsFileOnline);
 
-            MonarchDataProvider dp = new MonarchDataProvider();
             
-            List<KingRaw> _kings = dp.GetMonarchData(_kingsFileOnline);
+            MonarchDataProvider mdp = new MonarchDataProvider();
+            
+            List<KingRaw> _kings = mdp.GetMonarchData(_kingsFileOnline).Result;
 
             MonarchListUtils mlUtils = new MonarchListUtils(_kings);
 
@@ -37,24 +40,38 @@ namespace KingsChallenge
 
     class MonarchDataProvider
     {
-        public List<KingRaw> GetMonarchData(string monarchUri)
+        public async Task<List<KingRaw>> GetMonarchData(string monarchUri)
         {
-            WebRequest wr = WebRequest.Create(monarchUri);
-            wr.Credentials = CredentialCache.DefaultCredentials;
-            HttpWebResponse response = (HttpWebResponse)wr.GetResponse ();
-                // Display the status.
-            Console.WriteLine (response.StatusDescription);
-                // Get the stream containing content returned by the server.
-            Stream dataStream = response.GetResponseStream ();
-                // Open the stream using a StreamReader for easy access.
-            using(StreamReader sr = new StreamReader(dataStream))
+            Console.Out.WriteLine("Entering ReadMonarchData");
+            using(HttpClient c = new HttpClient())
             {
-                string kings = sr.ReadToEnd();
-                // Console.Out.WriteLine(kings);
-                return JsonSerializer.Deserialize<List<KingRaw>>(kings);
+                HttpResponseMessage response = await c.GetAsync(monarchUri);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<KingRaw>>(responseBody);
             }
         }
     }
+    // class DeprecatedMonarchDataProvider
+    // {
+    //     public List<KingRaw> GetMonarchData(string monarchUri)
+    //     {
+    //         WebRequest wr = WebRequest.Create(monarchUri);
+    //         wr.Credentials = CredentialCache.DefaultCredentials;
+    //         HttpWebResponse response = (HttpWebResponse)wr.GetResponse ();
+    //             // Display the status.
+    //         Console.WriteLine (response.StatusDescription);
+    //             // Get the stream containing content returned by the server.
+    //         Stream dataStream = response.GetResponseStream ();
+    //             // Open the stream using a StreamReader for easy access.
+    //         using(StreamReader sr = new StreamReader(dataStream))
+    //         {
+    //             string kings = sr.ReadToEnd();
+    //             // Console.Out.WriteLine(kings);
+    //             return JsonSerializer.Deserialize<List<KingRaw>>(kings);
+    //         }
+    //     }
+    // }
 
     class MonarchListUtils
     {
@@ -72,13 +89,13 @@ namespace KingsChallenge
 
         public KingRaw GetLongestReiningMonarch()
         {
-            KingRaw lrMonarch = _monarchList.MaxBy( m => m.ReignLength());
+            KingRaw? lrMonarch = _monarchList.MaxBy( m => m.ReignLength());
             return lrMonarch;
         }
 
         public string GetLongestReiningHouse()
         {
-            IEnumerable<IGrouping<string, KingRaw>> houses = _monarchList.GroupBy( monarch => monarch.hse);
+            IEnumerable<IGrouping<string?, KingRaw>> houses = _monarchList.GroupBy( monarch => monarch.hse);
             
             // foreach(var houseGroup in houses)
             // {
@@ -92,10 +109,6 @@ namespace KingsChallenge
         {
             IEnumerable<IGrouping<string, KingRaw>> fNames = _monarchList.GroupBy( monarch => monarch.FirstName());
 
-            // foreach(var fnGroup in fNames)
-            // {
-            //     Console.Out.WriteLine($"First Name: {fnGroup.Key}, monarchs: {fnGroup.Count()}");
-            // }
             return fNames.MaxBy( fName => fName.Count()).Key;
         }
     }
