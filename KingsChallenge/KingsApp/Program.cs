@@ -26,15 +26,14 @@ public class KingsChallenge
             // Console.Out.WriteLine(kings);
             _kings = JsonSerializer.Deserialize<List<KingRaw>>(kings);
         }
-        Console.Out.WriteLine("Monarch count: {0}", _kings.Count);
 
-        foreach(KingRaw king in _kings)
-            Console.Out.WriteLine(king.ToString());
+        // foreach(KingRaw king in _kings)
+        //     Console.Out.WriteLine(king.ToString());
 
         MonarchListUtils mlUtils = new MonarchListUtils(_kings);
 
-        int monarchCount = mlUtils.GetMonarchCount(_kings);
-        Console.Out.WriteLine("MOnarch count: {0}", monarchCount);
+        int monarchCount = mlUtils.GetMonarchCount();
+        Console.Out.WriteLine("Monarch count: {0}", monarchCount);
 
         KingRaw longestReigningMonarch = mlUtils.GetLongestReiningMonarch();
         Console.Out.WriteLine("Longest reigning monarch: {0}, ruled for {1} years", longestReigningMonarch.nm, longestReigningMonarch.ReignLength());
@@ -58,24 +57,38 @@ class MonarchListUtils
         _monarchList = monarchList;
     }
 
-    public int GetMonarchCount(List<KingRaw> monarchList)
+    public int GetMonarchCount()
     {
-        return 10;
+        return _monarchList.Count();
     }
 
     public KingRaw GetLongestReiningMonarch()
     {
-        return null;
+        KingRaw lrMonarch = _monarchList.MaxBy( m => m.ReignLength());
+        return lrMonarch;
     }
 
     public string GetLongestReiningHouse()
     {
-        return null;
+        IEnumerable<IGrouping<string, KingRaw>> houses = _monarchList.GroupBy( monarch => monarch.hse);
+        
+        foreach(var houseGroup in houses)
+        {
+            Console.Out.WriteLine($"House: {houseGroup.Key}, monarchs: {houseGroup.Count()}");
+        }
+
+        return houses.MaxBy( house => house.Count()).Key;
     }
 
     public string GetMostCommonFirstName()
     {
-        return null;
+        IEnumerable<IGrouping<string, KingRaw>> fNames = _monarchList.GroupBy( monarch => monarch.FirstName());
+
+        foreach(var fnGroup in fNames)
+        {
+            Console.Out.WriteLine($"First Name: {fnGroup.Key}, monarchs: {fnGroup.Count()}");
+        }
+        return fNames.MaxBy( fName => fName.Count()).Key;
     }
 }
 
@@ -125,15 +138,14 @@ class KingRaw
         return (_reignEnd - _reignStart);
     }
 
+    public string FirstName()
+    {
+        string[] parts = nm.Split(' ');
+        return parts[0];
+    }
+
     public override string ToString()
     {
-        // return String.Format("King {0}\n\tCity {1}\n\t{House {2}\n\tReign started at {3}\n\tReign ended at {4}\n\tReigned for {5}",
-        //     nm,
-        //     cty,
-        //     hse,
-        //     _reignStart,
-        //     _reignEnd,
-        //     ReignLength());
         int len = ReignLength();
         return String.Format("{0}\n\t{1}\n\t{2}\n\t{3}\n\t{4}\n\t{5}", nm, cty, hse, _reignStart, _reignEnd, len);
     }
