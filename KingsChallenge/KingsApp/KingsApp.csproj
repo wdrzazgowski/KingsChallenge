@@ -7,5 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Json.Net" Version="1.0.33"/>
+    <PackageReference Include="log4net" Version="3.0.4"/>
   </ItemGroup>
 </Project>

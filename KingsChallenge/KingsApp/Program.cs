@@ -4,20 +4,31 @@
 using System.IO;
 using System.Text.Json;
 using System.Net;
+using System.Xml;
+using System.Reflection;
+
+using log4net; 
+
+[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config")]
 
 namespace KingsChallenge
 {
     public class KingsChallenge
     {
+        private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         static void Main(string[] args)
         {
             string _kingsFileOnline = "https://gist.githubusercontent.com/christianpanton/10d65ccef9f29de3acd49d97ed423736/raw/b09563bc0c4b318132c7a738e679d4f984ef0048/kings";
            
-            MonarchDataProvider mdp = new MonarchDataProvider();
+            ConfigureLogger();
+
+            logger.Debug("Creating MonarchDataProvider object");
+            MonarchDataProvider mdp = new MonarchDataProvider(logger);
             
             List<KingRaw> _kings = mdp.GetMonarchData(_kingsFileOnline).Result;
 
-            MonarchListUtils mlUtils = new MonarchListUtils(_kings);
+            MonarchListUtils mlUtils = new MonarchListUtils(_kings, logger);
 
             int monarchCount = mlUtils.GetMonarchCount();
             Console.Out.WriteLine("Monarch count: {0}", monarchCount);
@@ -33,18 +44,33 @@ namespace KingsChallenge
             string mostCommonFirstName = mlUtils.GetMostCommonFirstName();
             Console.Out.WriteLine("Most common first name: {0}", mostCommonFirstName);
         }
+
+        static void ConfigureLogger()
+        {
+            XmlDocument log4netConfig = new XmlDocument();
+            log4netConfig.Load(File.OpenRead("log4net.config"));
+            var repo = log4net.LogManager.CreateRepository(Assembly.GetEntryAssembly(),
+                        typeof(log4net.Repository.Hierarchy.Hierarchy));
+            log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);
+        }
     }
 
     class MonarchDataProvider
     {
+        ILog _logger;
+        public MonarchDataProvider(ILog logger)
+        {
+            _logger = logger;
+        }
         public async Task<List<KingRaw>> GetMonarchData(string monarchUri)
         {
-            Console.Out.WriteLine("Entering ReadMonarchData");
             using(HttpClient c = new HttpClient())
             {
+                _logger.Debug($"Trying to fetch monarch data from {monarchUri}");
                 HttpResponseMessage response = await c.GetAsync(monarchUri);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
+                _logger.Debug($"Read response {responseBody}");
                 return JsonSerializer.Deserialize<List<KingRaw>>(responseBody);
             }
         }
@@ -53,9 +79,10 @@ namespace KingsChallenge
     class MonarchListUtils
     {
         List<KingRaw> _monarchList;
-
-        public MonarchListUtils(List<KingRaw> monarchList)
+        ILog _logger;
+        public MonarchListUtils(List<KingRaw> monarchList, ILog logger)
         {
+            _logger = logger;
             _monarchList = monarchList;
         }
 
@@ -128,15 +155,8 @@ namespace KingsChallenge
 
         public string FirstName()
         {
-            string[] parts = nm.Split(' ');
-        
+              string[] parts = nm.Split(' ');
             return parts[0];
-        }
-
-        public override string ToString()
-        {
-            int len = ReignLength();
-            return String.Format("{0}\n\t{1}\n\t{2}\n\t{3}\n\t{4}\n\t{5}", nm, cty, hse, _reignStart, _reignEnd, len);
         }
     }
 }
