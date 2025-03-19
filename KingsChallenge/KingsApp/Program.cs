@@ -5,148 +5,152 @@ using System.IO;
 using System.Text.Json;
 using System.Net;
 
-public class KingsChallenge
+namespace KingsChallenge
 {
-    static void Main(string[] args)
+    public class KingsChallenge
     {
-        string _kingsFileOnline = "https://gist.githubusercontent.com/christianpanton/10d65ccef9f29de3acd49d97ed423736/raw/b09563bc0c4b318132c7a738e679d4f984ef0048/kings";
-        List<KingRaw> _kings = new List<KingRaw>();
-
-        WebRequest wr = WebRequest.Create(_kingsFileOnline);
-        wr.Credentials = CredentialCache.DefaultCredentials;
-        HttpWebResponse response = (HttpWebResponse)wr.GetResponse ();
-            // Display the status.
-        Console.WriteLine (response.StatusDescription);
-            // Get the stream containing content returned by the server.
-        Stream dataStream = response.GetResponseStream ();
-            // Open the stream using a StreamReader for easy access.
-        using(StreamReader sr = new StreamReader(dataStream))
+        static void Main(string[] args)
         {
-            string kings = sr.ReadToEnd();
-            // Console.Out.WriteLine(kings);
-            _kings = JsonSerializer.Deserialize<List<KingRaw>>(kings);
+            string _kingsFileOnline = "https://gist.githubusercontent.com/christianpanton/10d65ccef9f29de3acd49d97ed423736/raw/b09563bc0c4b318132c7a738e679d4f984ef0048/kings";
+            List<KingRaw> _kings = new List<KingRaw>();
+
+            WebRequest wr = WebRequest.Create(_kingsFileOnline);
+            wr.Credentials = CredentialCache.DefaultCredentials;
+            HttpWebResponse response = (HttpWebResponse)wr.GetResponse ();
+                // Display the status.
+            Console.WriteLine (response.StatusDescription);
+                // Get the stream containing content returned by the server.
+            Stream dataStream = response.GetResponseStream ();
+                // Open the stream using a StreamReader for easy access.
+            using(StreamReader sr = new StreamReader(dataStream))
+            {
+                string kings = sr.ReadToEnd();
+                // Console.Out.WriteLine(kings);
+                _kings = JsonSerializer.Deserialize<List<KingRaw>>(kings);
+            }
+
+            // foreach(KingRaw king in _kings)
+            //     Console.Out.WriteLine(king.ToString());
+
+            MonarchListUtils mlUtils = new MonarchListUtils(_kings);
+
+            int monarchCount = mlUtils.GetMonarchCount();
+            Console.Out.WriteLine("Monarch count: {0}", monarchCount);
+
+            KingRaw longestReigningMonarch = mlUtils.GetLongestReiningMonarch();
+            Console.Out.WriteLine("Longest reigning monarch: {0}, ruled for {1} years", longestReigningMonarch.nm, longestReigningMonarch.ReignLength());
+
+
+            string longestReiningHouse = mlUtils.GetLongestReiningHouse();
+            Console.Out.WriteLine("Longest reigning house: {0}", longestReiningHouse);
+
+
+            string mostCommonFirstName = mlUtils.GetMostCommonFirstName();
+            Console.Out.WriteLine("Most common first name: {0}", mostCommonFirstName);
+        }
+    }
+
+    class MonarchListUtils
+    {
+        List<KingRaw> _monarchList;
+
+        public MonarchListUtils(List<KingRaw> monarchList)
+        {
+            _monarchList = monarchList;
         }
 
-        // foreach(KingRaw king in _kings)
-        //     Console.Out.WriteLine(king.ToString());
+        public int GetMonarchCount()
+        {
+            return _monarchList.Count();
+        }
 
-        MonarchListUtils mlUtils = new MonarchListUtils(_kings);
+        public KingRaw GetLongestReiningMonarch()
+        {
+            KingRaw lrMonarch = _monarchList.MaxBy( m => m.ReignLength());
+            return lrMonarch;
+        }
 
-        int monarchCount = mlUtils.GetMonarchCount();
-        Console.Out.WriteLine("Monarch count: {0}", monarchCount);
+        public string GetLongestReiningHouse()
+        {
+            IEnumerable<IGrouping<string, KingRaw>> houses = _monarchList.GroupBy( monarch => monarch.hse);
+            
+            foreach(var houseGroup in houses)
+            {
+                Console.Out.WriteLine($"House: {houseGroup.Key}, monarchs: {houseGroup.Count()}");
+            }
 
-        KingRaw longestReigningMonarch = mlUtils.GetLongestReiningMonarch();
-        Console.Out.WriteLine("Longest reigning monarch: {0}, ruled for {1} years", longestReigningMonarch.nm, longestReigningMonarch.ReignLength());
+            return houses.MaxBy( house => house.Count()).Key;
+        }
 
+        public string GetMostCommonFirstName()
+        {
+            IEnumerable<IGrouping<string, KingRaw>> fNames = _monarchList.GroupBy( monarch => monarch.FirstName());
 
-        string longestReiningHouse = mlUtils.GetLongestReiningHouse();
-        Console.Out.WriteLine("Longest reigning house: {0}", longestReiningHouse);
-
-
-        string mostCommonFirstName = mlUtils.GetMostCommonFirstName();
-        Console.Out.WriteLine("Most common first name: {0}", mostCommonFirstName);
-    }
-}
-
-class MonarchListUtils
-{
-    List<KingRaw> _monarchList;
-
-    public MonarchListUtils(List<KingRaw> monarchList)
-    {
-        _monarchList = monarchList;
-    }
-
-    public int GetMonarchCount()
-    {
-        return _monarchList.Count();
-    }
-
-    public KingRaw GetLongestReiningMonarch()
-    {
-        KingRaw lrMonarch = _monarchList.MaxBy( m => m.ReignLength());
-        return lrMonarch;
+            foreach(var fnGroup in fNames)
+            {
+                Console.Out.WriteLine($"First Name: {fnGroup.Key}, monarchs: {fnGroup.Count()}");
+            }
+            return fNames.MaxBy( fName => fName.Count()).Key;
+        }
     }
 
-    public string GetLongestReiningHouse()
+    public class KingRaw
     {
-        IEnumerable<IGrouping<string, KingRaw>> houses = _monarchList.GroupBy( monarch => monarch.hse);
+        public int id { get; set; }
+        public string nm { get; set; }
+        public string cty { get; set; }
+        public string hse { get; set; }
+
+        private string _years;
+        public string yrs 
+        { 
+            get
+            {
+                return _years;
+            }
+            set
+            {
+                _years = value;
+                ParseReignYears();
+            } 
+        }
+        public int _reignStart;
+        public int _reignEnd;
+
+        private void ParseReignYears()
+        {
+            string[] years = _years.Split('-');
+            _reignStart = Int32.Parse(years[0]);
+            if(years.Length == 1)
+                _reignEnd = _reignStart;
+            else
+            {
+                //Console.Out.WriteLine("Years[1]: {0}", years[1]);
+                if(!Int32.TryParse(years[1], out _reignEnd))
+                    _reignEnd = DateTime.Now.Year;
+                //Console.Out.WriteLine("_reignEnd: {0}", _reignEnd);
+            }
+        }
+
+        public int ReignLength()
+        {
+            // Console.Out.WriteLine(_years);
+            // Console.Out.WriteLine(_reignStart);
+            // Console.Out.WriteLine(_reignEnd);
+            return (_reignEnd - _reignStart);
+        }
+
+        public string FirstName()
+        {
+            string[] parts = nm.Split(' ');
         
-        foreach(var houseGroup in houses)
-        {
-            Console.Out.WriteLine($"House: {houseGroup.Key}, monarchs: {houseGroup.Count()}");
+            return parts[0];
         }
 
-        return houses.MaxBy( house => house.Count()).Key;
-    }
-
-    public string GetMostCommonFirstName()
-    {
-        IEnumerable<IGrouping<string, KingRaw>> fNames = _monarchList.GroupBy( monarch => monarch.FirstName());
-
-        foreach(var fnGroup in fNames)
+        public override string ToString()
         {
-            Console.Out.WriteLine($"First Name: {fnGroup.Key}, monarchs: {fnGroup.Count()}");
-        }
-        return fNames.MaxBy( fName => fName.Count()).Key;
-    }
-}
-
-class KingRaw
-{
-    public int id { get; set; }
-    public string nm { get; set; }
-    public string cty { get; set; }
-    public string hse { get; set; }
-
-    private string _years;
-    public string yrs 
-    { 
-        get
-        {
-            return _years;
-        }
-        set
-        {
-            _years = value;
-            ParseReignYears();
-        } 
-    }
-    public int _reignStart;
-    public int _reignEnd;
-
-    private void ParseReignYears()
-    {
-        string[] years = _years.Split('-');
-        _reignStart = Int32.Parse(years[0]);
-        if(years.Length == 1)
-            _reignEnd = _reignStart;
-        else
-        {
-            //Console.Out.WriteLine("Years[1]: {0}", years[1]);
-            if(!Int32.TryParse(years[1], out _reignEnd))
-                _reignEnd = DateTime.Now.Year;
-            //Console.Out.WriteLine("_reignEnd: {0}", _reignEnd);
+            int len = ReignLength();
+            return String.Format("{0}\n\t{1}\n\t{2}\n\t{3}\n\t{4}\n\t{5}", nm, cty, hse, _reignStart, _reignEnd, len);
         }
     }
-
-    public int ReignLength()
-    {
-        // Console.Out.WriteLine(_years);
-        // Console.Out.WriteLine(_reignStart);
-        // Console.Out.WriteLine(_reignEnd);
-        return (_reignEnd - _reignStart);
     }
-
-    public string FirstName()
-    {
-        string[] parts = nm.Split(' ');
-        return parts[0];
-    }
-
-    public override string ToString()
-    {
-        int len = ReignLength();
-        return String.Format("{0}\n\t{1}\n\t{2}\n\t{3}\n\t{4}\n\t{5}", nm, cty, hse, _reignStart, _reignEnd, len);
-    }
-}
