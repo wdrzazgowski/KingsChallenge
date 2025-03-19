@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Net;
 using System.Xml;
 using System.Reflection;
+using System;
 
 using log4net; 
 
@@ -47,8 +48,8 @@ namespace KingsChallenge
                 longestReigningMonarch.ReignLength());
 
 
-            string longestReiningHouse = mlUtils.GetLongestReiningHouse() ?? "Longet reigning house not found - possible error in data processing.";
-            Console.Out.WriteLine("Longest reigning house: {0}", longestReiningHouse);
+            var longestReiningHouse = mlUtils.GetLongestReigningHouse();  // ?? "Longet reigning house not found - possible error in data processing."
+            Console.Out.WriteLine($"Longest reigning house: {longestReiningHouse.Item1} reigned for {longestReiningHouse.Item2} years");
 
 
             string mostCommonFirstName = mlUtils.GetMostCommonFirstName();
@@ -80,7 +81,7 @@ namespace KingsChallenge
                 HttpResponseMessage response = await c.GetAsync(monarchUri);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
-                _logger.Debug($"Read response {responseBody}");
+                //_logger.Debug($"Read response {responseBody}");
                 List<MonarchDto> mdtoList = JsonSerializer.Deserialize<List<MonarchDto>>(responseBody);
                 
                 List<Monarch> monarchs = new List<Monarch>();
@@ -119,16 +120,22 @@ namespace KingsChallenge
             return lrMonarch;
         }
 
-        public string? GetLongestReiningHouse()
+        public (string, int) GetLongestReigningHouse()
         {
             if(_monarchList == null)
-                return null;
+                return ("", 0);
 
             IEnumerable<IGrouping<string?, Monarch>> houses = _monarchList.GroupBy( monarch => monarch._monarchData.hse);
-            if(houses == null)
-                return null;
-
-            return houses.MaxBy( house => house.Count()).Key;
+            
+            List<(string, int)> houseRules = new List<(string, int)>();
+            foreach(IGrouping<string?, Monarch> house in houses)
+            {
+                int ruledFor = house.Sum( h => h.ReignLength());
+                _logger.Debug($"House {house.Key} ruled for {ruledFor} years.");  
+                houseRules.Add((house.Key, ruledFor));
+            }
+            //return (houses.MaxBy( house => house.Count()).Key, 99);
+            return houseRules.MaxBy(h=>h.Item2);
         }
 
         public string GetMostCommonFirstName()
