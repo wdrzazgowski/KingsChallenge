@@ -17,18 +17,13 @@ namespace KingsChallenge
             
             List<KingRaw> _kings = dp.GetMonarchData(_kingsFileOnline);
 
-            
-
-            // foreach(KingRaw king in _kings)
-            //     Console.Out.WriteLine(king.ToString());
-
             MonarchListUtils mlUtils = new MonarchListUtils(_kings);
 
             int monarchCount = mlUtils.GetMonarchCount();
             Console.Out.WriteLine("Monarch count: {0}", monarchCount);
 
             KingRaw longestReigningMonarch = mlUtils.GetLongestReiningMonarch();
-            Console.Out.WriteLine("Longest reigning monarch: {0}, ruled for {1} years", longestReigningMonarch.nm, longestReigningMonarch.ReignLength());
+            Console.Out.WriteLine("Longest reigning monarch: {0}, ruled for {1} years\n\tAre we not shamefuly ignoring King Charles?", longestReigningMonarch.nm, longestReigningMonarch.ReignLength());
 
 
             string longestReiningHouse = mlUtils.GetLongestReiningHouse();
@@ -108,11 +103,11 @@ namespace KingsChallenge
     public class KingRaw
     {
         public int id { get; set; }
-        public string nm { get; set; }
-        public string cty { get; set; }
-        public string hse { get; set; }
+        public string? nm { get; set; }
+        public string? cty { get; set; }
+        public string? hse { get; set; }
 
-        private string _years;
+        private string? _years;
         public string yrs 
         { 
             get

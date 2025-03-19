@@ -10,7 +10,7 @@ public class UnitTest1
         KingRaw kingWithNoName = new KingRaw();
         kingWithNoName.nm = "";
 
-        Assert.Equal(kingWithNoName.FirstName(), "");
+        Assert.Equal("", kingWithNoName.FirstName());
     }
 
     [Fact]
@@ -28,6 +28,6 @@ public class UnitTest1
         KingRaw k = new KingRaw();
         k.nm = "Mieszko I";
 
-        Assert.Equal(k.FirstName(), "Mieszko");
+        Assert.Equal("Mieszko", k.FirstName());
     }
 }
