@@ -7,8 +7,8 @@ public class UnitTest1
     [Fact]
     public void FirstNameShouldReturnEmptyIfNameEmpty()
     {
-        Monarch kingWithNoName = new Monarch();
-        kingWithNoName.nm = "";
+        Monarch kingWithNoName = new Monarch(new MonarchDto(), null);
+        kingWithNoName._monarchData.nm = "";
 
         Assert.Equal("", kingWithNoName.FirstName());
     }
@@ -16,8 +16,8 @@ public class UnitTest1
     [Fact]
     public void FirstNameShouldThrowExceptionIfNameNull()
     {
-        Monarch kingWithNoName = new Monarch();
-        kingWithNoName.nm = null;
+        Monarch kingWithNoName = new Monarch(new MonarchDto(), null);
+        kingWithNoName._monarchData.nm = null;
 
         Assert.Throws<NullReferenceException>(() => kingWithNoName.FirstName());
     }
@@ -25,8 +25,8 @@ public class UnitTest1
     [Fact]
     public void FirstNameShouldBeSameAsFirstSplitItem()
     {
-        Monarch k = new Monarch();
-        k.nm = "Mieszko I";
+        Monarch k = new Monarch(new MonarchDto(), null);
+        k._monarchData.nm = "Mieszko I";
 
         Assert.Equal("Mieszko", k.FirstName());
     }
