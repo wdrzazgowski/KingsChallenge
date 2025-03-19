@@ -88,6 +88,8 @@ namespace KingsChallenge
                 foreach(MonarchDto mdto in mdtoList)
                 {
                     Monarch m = new Monarch(mdto, _logger);
+                    m.ParseReignYears();
+                    m.CalculateFirstName();
                     monarchs.Add(m);
                 }
                 return monarchs;
@@ -161,7 +163,7 @@ namespace KingsChallenge
     {
         ILog _logger;
         public MonarchDto _monarchData;
-
+        string _firstName = "";
         public Monarch()
         {
         }
@@ -170,7 +172,6 @@ namespace KingsChallenge
         {
             _logger = logger;
             _monarchData = mdto;
-            ParseReignYears();
         }        
 
         public int _reignStart;
@@ -185,7 +186,7 @@ namespace KingsChallenge
             }
         }
 
-        void ParseReignYears()
+        public void ParseReignYears()
         {  
             try
             {
@@ -218,10 +219,14 @@ namespace KingsChallenge
             }
         }
 
-        public string FirstName()
+        public void CalculateFirstName()
         {
             string[] parts = _monarchData.nm.Split(' ');
-            return parts[0];
+            _firstName = parts[0];
+        }
+        public string FirstName()
+        {
+            return _firstName;
         }
     }
 }
