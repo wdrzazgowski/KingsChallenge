@@ -153,4 +153,4 @@ namespace KingsChallenge
             return String.Format("{0}\n\t{1}\n\t{2}\n\t{3}\n\t{4}\n\t{5}", nm, cty, hse, _reignStart, _reignEnd, len);
         }
     }
-    }
+}
