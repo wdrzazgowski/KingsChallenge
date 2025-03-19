@@ -66,7 +66,7 @@ class KingRaw
         {
             //Console.Out.WriteLine("Years[1]: {0}", years[1]);
             if(!Int32.TryParse(years[1], out _reignEnd))
-                _reignEnd = -1;
+                _reignEnd = DateTime.Now.Year;
             //Console.Out.WriteLine("_reignEnd: {0}", _reignEnd);
         }
     }
