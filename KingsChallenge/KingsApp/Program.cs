@@ -21,7 +21,15 @@ namespace KingsChallenge
         {
             string _kingsFileOnline = "https://gist.githubusercontent.com/christianpanton/10d65ccef9f29de3acd49d97ed423736/raw/b09563bc0c4b318132c7a738e679d4f984ef0048/kings";
            
-            ConfigureLogger();
+            try
+            {
+                ConfigureLogger();
+            }
+            catch
+            {
+                Console.Error.WriteLine("Could not initialize log4net logger - continuing without.");
+                // not very nice... but if log4net config is not found the applciation will continue
+            }
 
             logger.Debug("Creating MonarchDataProvider object");
             MonarchDataProvider mdp = new MonarchDataProvider(logger);
@@ -52,7 +60,7 @@ namespace KingsChallenge
             var repo = log4net.LogManager.CreateRepository(Assembly.GetEntryAssembly(),
                         typeof(log4net.Repository.Hierarchy.Hierarchy));
             log4net.Config.XmlConfigurator.Configure(repo, log4netConfig["log4net"]);
-        }
+    }
     }
 
     class MonarchDataProvider
