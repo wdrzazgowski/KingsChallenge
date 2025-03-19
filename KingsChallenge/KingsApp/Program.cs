@@ -45,7 +45,7 @@ namespace KingsChallenge
             Monarch longestReigningMonarch = mlUtils.GetLongestReiningMonarch();
             Console.Out.WriteLine("Longest reigning monarch: {0}, ruled for {1} years\n\tAre we not shamefuly ignoring King Charles?", 
                 longestReigningMonarch.Name, 
-                longestReigningMonarch.ReignLength());
+                longestReigningMonarch.ReignLength);
 
 
             var longestReiningHouse = mlUtils.GetLongestReigningHouse();  // 
@@ -115,7 +115,7 @@ namespace KingsChallenge
 
         public Monarch GetLongestReiningMonarch()
         {
-            Monarch lrMonarch = _monarchList.MaxBy(m => m.ReignLength());
+            Monarch lrMonarch = _monarchList.MaxBy(m => m.ReignLength);
             return lrMonarch;
         }
 
@@ -130,7 +130,7 @@ namespace KingsChallenge
             List<(string, int)> houseRules = new List<(string, int)>();
             foreach(IGrouping<string, Monarch> house in houses)
             {
-                int ruledFor = house.Sum( h => h.ReignLength());
+                int ruledFor = house.Sum( h => h.ReignLength);
                 _logger.Debug($"House {house.Key} ruled for {ruledFor} years.");  
                 houseRules.Add((house.Key, ruledFor));
             }
@@ -175,6 +175,7 @@ namespace KingsChallenge
 
         public int _reignStart;
         public int _reignEnd;
+        int _reignLength;
 
         public string Name
         {
@@ -197,19 +198,24 @@ namespace KingsChallenge
                     if(!Int32.TryParse(years[1], out _reignEnd))
                         _reignEnd = DateTime.Now.Year;
                 }
+                _reignLength = _reignEnd - _reignStart; 
             }
             catch(Exception ex)
             {
                 _logger.Error($"Cound not parse reign years for monarch {_monarchData.nm}", ex);
                 _reignStart = 0;
                 _reignEnd = 0;
+                _reignLength = 0; 
                 return; 
             }
         }
 
-        public int ReignLength()
+        public int ReignLength
         {
-            return (_reignEnd - _reignStart);
+            get
+            {
+                return _reignLength;
+            }
         }
 
         public string FirstName()
