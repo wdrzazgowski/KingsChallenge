@@ -12,10 +12,7 @@ namespace KingsChallenge
         static void Main(string[] args)
         {
             string _kingsFileOnline = "https://gist.githubusercontent.com/christianpanton/10d65ccef9f29de3acd49d97ed423736/raw/b09563bc0c4b318132c7a738e679d4f984ef0048/kings";
-            // DeprecatedMonarchDataProvider dp = new DeprecatedMonarchDataProvider();     
-            // List<KingRaw> _kings = dp.GetMonarchData(_kingsFileOnline);
-
-            
+           
             MonarchDataProvider mdp = new MonarchDataProvider();
             
             List<KingRaw> _kings = mdp.GetMonarchData(_kingsFileOnline).Result;
@@ -52,26 +49,6 @@ namespace KingsChallenge
             }
         }
     }
-    // class DeprecatedMonarchDataProvider
-    // {
-    //     public List<KingRaw> GetMonarchData(string monarchUri)
-    //     {
-    //         WebRequest wr = WebRequest.Create(monarchUri);
-    //         wr.Credentials = CredentialCache.DefaultCredentials;
-    //         HttpWebResponse response = (HttpWebResponse)wr.GetResponse ();
-    //             // Display the status.
-    //         Console.WriteLine (response.StatusDescription);
-    //             // Get the stream containing content returned by the server.
-    //         Stream dataStream = response.GetResponseStream ();
-    //             // Open the stream using a StreamReader for easy access.
-    //         using(StreamReader sr = new StreamReader(dataStream))
-    //         {
-    //             string kings = sr.ReadToEnd();
-    //             // Console.Out.WriteLine(kings);
-    //             return JsonSerializer.Deserialize<List<KingRaw>>(kings);
-    //         }
-    //     }
-    // }
 
     class MonarchListUtils
     {
@@ -97,11 +74,6 @@ namespace KingsChallenge
         {
             IEnumerable<IGrouping<string?, KingRaw>> houses = _monarchList.GroupBy( monarch => monarch.hse);
             
-            // foreach(var houseGroup in houses)
-            // {
-            //     Console.Out.WriteLine($"House: {houseGroup.Key}, monarchs: {houseGroup.Count()}");
-            // }
-
             return houses.MaxBy( house => house.Count()).Key;
         }
 
@@ -144,18 +116,13 @@ namespace KingsChallenge
                 _reignEnd = _reignStart;
             else
             {
-                //Console.Out.WriteLine("Years[1]: {0}", years[1]);
                 if(!Int32.TryParse(years[1], out _reignEnd))
                     _reignEnd = DateTime.Now.Year;
-                //Console.Out.WriteLine("_reignEnd: {0}", _reignEnd);
             }
         }
 
         public int ReignLength()
         {
-            // Console.Out.WriteLine(_years);
-            // Console.Out.WriteLine(_reignStart);
-            // Console.Out.WriteLine(_reignEnd);
             return (_reignEnd - _reignStart);
         }
 
