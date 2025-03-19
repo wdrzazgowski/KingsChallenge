@@ -12,22 +12,12 @@ namespace KingsChallenge
         static void Main(string[] args)
         {
             string _kingsFileOnline = "https://gist.githubusercontent.com/christianpanton/10d65ccef9f29de3acd49d97ed423736/raw/b09563bc0c4b318132c7a738e679d4f984ef0048/kings";
-            List<KingRaw> _kings = new List<KingRaw>();
 
-            WebRequest wr = WebRequest.Create(_kingsFileOnline);
-            wr.Credentials = CredentialCache.DefaultCredentials;
-            HttpWebResponse response = (HttpWebResponse)wr.GetResponse ();
-                // Display the status.
-            Console.WriteLine (response.StatusDescription);
-                // Get the stream containing content returned by the server.
-            Stream dataStream = response.GetResponseStream ();
-                // Open the stream using a StreamReader for easy access.
-            using(StreamReader sr = new StreamReader(dataStream))
-            {
-                string kings = sr.ReadToEnd();
-                // Console.Out.WriteLine(kings);
-                _kings = JsonSerializer.Deserialize<List<KingRaw>>(kings);
-            }
+            MonarchDataProvider dp = new MonarchDataProvider();
+            
+            List<KingRaw> _kings = dp.GetMonarchData(_kingsFileOnline);
+
+            
 
             // foreach(KingRaw king in _kings)
             //     Console.Out.WriteLine(king.ToString());
@@ -47,6 +37,27 @@ namespace KingsChallenge
 
             string mostCommonFirstName = mlUtils.GetMostCommonFirstName();
             Console.Out.WriteLine("Most common first name: {0}", mostCommonFirstName);
+        }
+    }
+
+    class MonarchDataProvider
+    {
+        public List<KingRaw> GetMonarchData(string monarchUri)
+        {
+            WebRequest wr = WebRequest.Create(monarchUri);
+            wr.Credentials = CredentialCache.DefaultCredentials;
+            HttpWebResponse response = (HttpWebResponse)wr.GetResponse ();
+                // Display the status.
+            Console.WriteLine (response.StatusDescription);
+                // Get the stream containing content returned by the server.
+            Stream dataStream = response.GetResponseStream ();
+                // Open the stream using a StreamReader for easy access.
+            using(StreamReader sr = new StreamReader(dataStream))
+            {
+                string kings = sr.ReadToEnd();
+                // Console.Out.WriteLine(kings);
+                return JsonSerializer.Deserialize<List<KingRaw>>(kings);
+            }
         }
     }
 
@@ -74,10 +85,10 @@ namespace KingsChallenge
         {
             IEnumerable<IGrouping<string, KingRaw>> houses = _monarchList.GroupBy( monarch => monarch.hse);
             
-            foreach(var houseGroup in houses)
-            {
-                Console.Out.WriteLine($"House: {houseGroup.Key}, monarchs: {houseGroup.Count()}");
-            }
+            // foreach(var houseGroup in houses)
+            // {
+            //     Console.Out.WriteLine($"House: {houseGroup.Key}, monarchs: {houseGroup.Count()}");
+            // }
 
             return houses.MaxBy( house => house.Count()).Key;
         }
@@ -86,10 +97,10 @@ namespace KingsChallenge
         {
             IEnumerable<IGrouping<string, KingRaw>> fNames = _monarchList.GroupBy( monarch => monarch.FirstName());
 
-            foreach(var fnGroup in fNames)
-            {
-                Console.Out.WriteLine($"First Name: {fnGroup.Key}, monarchs: {fnGroup.Count()}");
-            }
+            // foreach(var fnGroup in fNames)
+            // {
+            //     Console.Out.WriteLine($"First Name: {fnGroup.Key}, monarchs: {fnGroup.Count()}");
+            // }
             return fNames.MaxBy( fName => fName.Count()).Key;
         }
     }
