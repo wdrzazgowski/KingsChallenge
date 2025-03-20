@@ -22,14 +22,6 @@ public class UnitTest1
     }
 
     [Fact]
-    public void FirstNameShouldThrowExceptionIfNameNull()
-    {
-        Monarch kingWithNoName = new Monarch(new MonarchDto(){ id = 1, nm = null, cty = "", hse = "", yrs = "950-960" }, null);
-        
-        Assert.Throws<NullReferenceException>(() => kingWithNoName.CalculateFirstName());
-    }
-
-    [Fact]
     public void FirstNameShouldBeSameAsFirstSplitItem()
     {
         Monarch k = new Monarch(new MonarchDto(){ id = 1, nm = "", cty = "", hse = "", yrs = "950-960" }, null);
