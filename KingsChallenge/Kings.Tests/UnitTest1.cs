@@ -18,7 +18,7 @@ public class UnitTest1
             },
             null);
  
-        Assert.Equal("", kingWithNoName.FirstName());
+        Assert.Equal("", kingWithNoName.FirstName);
     }
 
     [Fact]
@@ -37,6 +37,6 @@ public class UnitTest1
         k._monarchData.yrs = "2000-1000";
         k.CalculateFirstName();
 
-        Assert.Equal("Mieszko", k.FirstName());
+        Assert.Equal("Mieszko", k.FirstName);
     }
 }

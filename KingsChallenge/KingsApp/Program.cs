@@ -25,6 +25,7 @@ namespace KingsChallenge
             try
             {
                 ConfigureLogger();
+                logger.Debug("Succesfully configuring the logger.");
             }
             catch
             {
@@ -32,11 +33,12 @@ namespace KingsChallenge
                 Console.Error.WriteLine("Could not initialize log4net logger - continuing without.");
             }
 
-            logger.Debug("Creating MonarchDataProvider object");
+            logger.Debug("Creating MonarchDataProvider object.");
             MonarchDataProvider mdp = new MonarchDataProvider(logger);
             
             List<Monarch> _kings = mdp.GetMonarchData(_kingsFileOnline).Result;
 
+            logger.Debug("Creating MonarchListUtils object.");
             MonarchListUtils mlUtils = new MonarchListUtils(_kings, logger);
 
             int monarchCount = mlUtils.GetMonarchCount();
@@ -81,7 +83,10 @@ namespace KingsChallenge
                 _logger.Debug($"Trying to fetch monarch data from {monarchUri}");
                 HttpResponseMessage response = await c.GetAsync(monarchUri);
                 response.EnsureSuccessStatusCode();
+                
                 string responseBody = await response.Content.ReadAsStringAsync();
+                _logger.Debug($"Succesfully read the reasponse.");
+                _logger.Debug($"Deserializing the reasponse.");
                 List<MonarchDto> mdtoList = JsonSerializer.Deserialize<List<MonarchDto>>(responseBody);
                 
                 List<Monarch> monarchs = new List<Monarch>();
@@ -92,6 +97,7 @@ namespace KingsChallenge
                     m.CalculateFirstName();
                     monarchs.Add(m);
                 }
+                _logger.Debug($"Found {monarchs.Count} monarchs in the response.");
                 return monarchs;
             }
         }
@@ -117,12 +123,16 @@ namespace KingsChallenge
 
         public Monarch GetLongestReiningMonarch()
         {
+            _logger.Debug("GetLongestReigningMonarch()");
             Monarch lrMonarch = _monarchList.MaxBy(m => m.ReignLength);
+            _logger.Debug($"Found monarch {lrMonarch}");
             return lrMonarch;
         }
 
+        // this one looks more compicated than it should be
         public (string, int) GetLongestReigningHouse()
         {
+            _logger.Debug("GetLongestReigningHouse()");
             if(_monarchList == null)
                 return ("", 0);
 
@@ -144,7 +154,7 @@ namespace KingsChallenge
             if(_monarchList ==null)
                 return null;
 
-            IEnumerable<IGrouping<string, Monarch>> fNames = _monarchList.GroupBy( monarch => monarch.FirstName());
+            IEnumerable<IGrouping<string, Monarch>> fNames = _monarchList.GroupBy( monarch => monarch.FirstName);
 
             return fNames.MaxBy( fName => fName.Count()).Key;
         }
@@ -200,6 +210,7 @@ namespace KingsChallenge
                         _reignEnd = DateTime.Now.Year;
                 }
                 _reignLength = _reignEnd - _reignStart; 
+                _logger.Debug($"ParseReignYears:\n\tReign start: {_reignStart}\n\tReign end: {_reignEnd}\n\tReign length: {_reignLength}");
             }
             catch(Exception ex)
             {
@@ -221,12 +232,23 @@ namespace KingsChallenge
 
         public void CalculateFirstName()
         {
+            _logger.Debug($"CalculateFirstName: parsing {_monarchData.nm}");
             string[] parts = _monarchData.nm.Split(' ');
             _firstName = parts[0];
+            _logger.Debug($"Found first name: {_firstName}");
         }
-        public string FirstName()
+
+        public string FirstName
         {
-            return _firstName;
+            get
+            {
+                return _firstName;
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format($"\n\tid = {_monarchData.id}\n\tName: {_monarchData.nm}\n\tCty: {_monarchData.cty}\n\tHouse: {_monarchData.hse}\n\tYears: {_monarchData.yrs}");
         }
     }
 }
