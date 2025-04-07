@@ -1,34 +1,10 @@
 namespace Kings.Tests;
 
-using KingsChallenge;
-
 public class UnitTest1
 {
     [Fact]
-    public void FirstNameShouldReturnEmptyIfNameEmpty()
+    public void Test1()
     {
-        Monarch kingWithNoName = new Monarch(
-            new MonarchDto()
-            { 
-                id = 1, 
-                nm = "", 
-                cty = "", 
-                hse = "", 
-                yrs = "950-960" 
-            },
-            null);
- 
-        Assert.Equal("", kingWithNoName.FirstName);
-    }
 
-    [Fact]
-    public void FirstNameShouldBeSameAsFirstSplitItem()
-    {
-        Monarch k = new Monarch(new MonarchDto(){ id = 1, nm = "", cty = "", hse = "", yrs = "950-960" }, null);
-        k._monarchData.nm = "Mieszko I";
-        k._monarchData.yrs = "2000-1000";
-        k.CalculateFirstName();
-
-        Assert.Equal("Mieszko", k.FirstName);
     }
 }

@@ -56,6 +56,9 @@ namespace KingsChallenge
                 var longestReiningHouse = mlUtils.GetLongestReigningHouse();  
                 Console.Out.WriteLine($"Longest reigning house: {longestReiningHouse.Item1} reigned for {longestReiningHouse.Item2} years");
 
+                var longestReigningHouse2 = mlUtils.GetLongestReigningHouse2();  
+                Console.Out.WriteLine($"Longest reigning house 2: {longestReigningHouse2}");
+
                 string mostCommonFirstName = mlUtils.GetMostCommonFirstName();
                 Console.Out.WriteLine("Most common first name: {0}", mostCommonFirstName);
             }
@@ -140,6 +143,21 @@ namespace KingsChallenge
             Monarch? lrMonarch = _monarchList.MaxBy(m => m.ReignLength);
             _logger.Debug($"Found monarch {lrMonarch}");
             return lrMonarch;
+        }
+
+
+        public string GetLongestReigningHouse2()
+        {
+            // var lrh = _monarchList.GroupBy(m => m._monarchData!.hse)
+            //     .Select(g => new { House = g.Key, ReignedFor = g.Sum(m => m.ReignLength) })
+            //     .OrderByDescending(h => h.ReignedFor)
+            //     .FirstOrDefault();
+
+            var lrh = _monarchList.GroupBy(m => m._monarchData!.hse)
+                .Select(g => new { House = g.Key, ReignedFor = g.Sum(m => m.ReignLength) }).MaxBy(h => h.ReignedFor);
+
+            return lrh?.House + " ruled for " + lrh?.ReignedFor + " years";
+
         }
 
         // this one looks more compicated than it should be
